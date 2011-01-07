@@ -1,6 +1,14 @@
+
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * HansKeys
+ * Global Hotkeys for java on All Plattforms(coming soon).
+ * http://hanskeys.sourceforge.net/
+ *
+ * required Libraries:
+ * jna.jat		https://jna.dev.java.net/
+ * platform.jar	https://jna.dev.java.net/
+ *
+ *
  */
 package org.hanstool.hanskeys;
 
@@ -8,12 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Has lists and constants of virtual KeyCodes
  * @author Wonko
  */
 public class KeyCodes
 {
-
+	/**
+	 * Get virtual KeyCode for a specific Key-stringRepresentation
+	 * @param sVk StringRepresentation
+	 * @return KeyCode
+	 */
 	public static Integer get(String sVk)
 	{
 		Integer result = getMapStrToVK().get(sVk);
@@ -25,6 +37,11 @@ public class KeyCodes
 	}
 
 
+	/**
+	 * Get stringRepresentation for a specific virtual KeyCode
+	 * @param iVk KeyCode
+	 * @return StringRepresentation
+	 */
 	public static String get(int iVk)
 	{
 		String result = getMapVKToStr().get(iVk);
@@ -35,7 +52,10 @@ public class KeyCodes
 		return Integer.toHexString(iVk);
 	}
 
-
+	/**
+	 * Maps KeyNames to their Keycodes
+	 * @return the map
+	 */
 	public static Map<String, Integer> getMapStrToVK()
 	{
 		if (StrToVkMap == null)
@@ -46,6 +66,11 @@ public class KeyCodes
 	}
 
 
+
+	/**
+	 * Maps Keycodes to their KeyNames
+	 * @return the map
+	 */
 	public static Map<Integer, String> getMapVKToStr()
 	{
 		if (VkToStrMap == null)

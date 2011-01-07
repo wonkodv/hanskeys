@@ -1,6 +1,14 @@
+
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * HansKeys
+ * Global Hotkeys for java on All Plattforms(coming soon).
+ * http://hanskeys.sourceforge.net/
+ *
+ * required Libraries:
+ * jna.jat		https://jna.dev.java.net/
+ * platform.jar	https://jna.dev.java.net/
+ *
+ *
  */
 package org.hanstool.hanskeys;
 
@@ -13,7 +21,9 @@ import com.sun.jna.platform.win32.WinDef.*;
 import com.sun.jna.platform.win32.WinUser.*;
 
 /**
- *
+ * The Windows Implementaion.
+ * There is an Extra listener thread that registers the hotkeys calling user32.dll RegisterHotKey
+ * and in a loop calls PeekMessage until Interupted using HotkeyManager.stop();
  * @author Wonko
  */
 class HotkeyManager_win extends HotkeyManager implements Runnable
@@ -30,7 +40,9 @@ class HotkeyManager_win extends HotkeyManager implements Runnable
 	}
 
 
-	@Override
+	/**
+	 * Starts the Listener Thread
+	 */
 	public void start()
 	{
 		if (theThread == null)
