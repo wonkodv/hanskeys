@@ -19,6 +19,8 @@ import com.sun.jna.win32.*;
 import com.sun.jna.platform.win32.*;
 import com.sun.jna.platform.win32.WinDef.*;
 import com.sun.jna.platform.win32.WinUser.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The Windows Implementaion.
@@ -30,7 +32,6 @@ class HotkeyManager_win extends HotkeyManager implements Runnable
 {
 
 	private Thread theThread;
-
 	private boolean updated = false;
 
 
@@ -59,6 +60,11 @@ class HotkeyManager_win extends HotkeyManager implements Runnable
 	 */
 	public void stop() throws InterruptedException
 	{
+		if (theThread == null)
+		{
+			return;
+		}
+
 		theThread.interrupt();
 		theThread.join();
 		theThread = null;
@@ -73,13 +79,9 @@ class HotkeyManager_win extends HotkeyManager implements Runnable
 
 	// http://msdn.microsoft.com/en-us/library/ms646309%28v=vs.85%29.aspx
 	private final int MOD_ALT = 0x0001;
-
 	private final int MOD_CONTROL = 0x0002;
-
 	private final int MOD_SHIFT = 0x0004;
-
 	private final int MOD_WIN = 0x0008;
-
 	private final int MOD_NOREPEAT = 0x4000;
 
 
@@ -138,8 +140,14 @@ class HotkeyManager_win extends HotkeyManager implements Runnable
 			{
 				t.printStackTrace();
 			}
-
-			Thread.yield();
+			try
+			{
+				Thread.sleep(50);
+			}
+			catch (InterruptedException ex)
+			{
+				break;
+			}
 		}
 		theThread = null;
 		System.out.println("HKWorker Stop");

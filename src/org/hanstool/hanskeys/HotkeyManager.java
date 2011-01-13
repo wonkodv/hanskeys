@@ -52,10 +52,17 @@ public abstract class HotkeyManager
 	 */
 	protected abstract void update();
 
-
+	/**
+	 * Start Listening for Hotkeys
+	 */
 	public abstract void start();
 
 
+	/**
+	 * Stop Listening for Hotkeys
+	 *
+	 * @throws InterruptedException
+	 */
 	public abstract void stop() throws InterruptedException;
 
 	protected final List<HotKey> hotkeys;
@@ -63,7 +70,8 @@ public abstract class HotkeyManager
 
 	/**
 	 * Registers a hotkey. It is inserted in the WorkerThreads TodoQueue that will register it pretty soon.
-	 * @throws all kinds of stuff
+	 * hk.notifyAll is called then
+	 * @param hk
 	 */
 	public synchronized  void addHotKey(HotKey hk)
 	{
@@ -73,7 +81,6 @@ public abstract class HotkeyManager
 		}
 		hotkeys.add(hk);
 		update();
-
 	}
 
 

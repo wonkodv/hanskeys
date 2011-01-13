@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Example
 {
 
-	public static void main(String[] argv) throws InterruptedException, IOException
+	public static void main(String[] argv) throws InterruptedException, IOException, InvalidHotkeyStringException
 	{
 		System.out.println("main start");
 

@@ -10,7 +10,6 @@
  *
  *
  */
-
 package org.hanstool.hanskeys;
 
 import java.util.Arrays;
@@ -55,6 +54,7 @@ public class HotKey
 	 * @param control
 	 * @param shift
 	 * @param win
+	 * @param noRepeat Windows Only. See MSDN RegisterHotkey
 	 * @param listeners
 	 */
 	public HotKey(int keyCode, boolean control, boolean alt, boolean shift, boolean win, boolean noRepeat, HotkeyListener... listeners)
@@ -70,13 +70,20 @@ public class HotKey
 	}
 
 
-	public HotKey(String hotkey, boolean noRepeat, HotkeyListener... listeners)
+	/**
+	 * Creates a new Hotkey from a StringRepresentation
+	 * @param hotkey	String in Form of Ctrl + Alt + Del Use Only names From KeyCodes.VkToStrMap
+	 * @param noRepeat Windows Only(i guess). See MSDN RegisterHotkey
+	 * @param listeners
+	 * @throws InvalidHotkeyStringException if the String was bad
+	 */
+	public HotKey(String hotkey, boolean noRepeat, HotkeyListener... listeners) throws InvalidHotkeyStringException
 	{
 
 		String[] pices = hotkey.split("[ +]+");
 		if (pices.length == 0)
 		{
-			throw new IllegalArgumentException("Hotkey must not be empty");
+			throw new InvalidHotkeyStringException("Hotkey must not be empty");
 		}
 
 		Integer vk = KeyCodes.getMapStrToVK().get(pices[pices.length - 1]);
@@ -105,7 +112,7 @@ public class HotKey
 				}
 				else
 				{
-					throw new IllegalArgumentException("No Valid Hotkey Modifier :" + pices[i]);
+					throw new InvalidHotkeyStringException("No Valid Hotkey Modifier :" + pices[i]);
 				}
 
 			}
@@ -120,7 +127,7 @@ public class HotKey
 		}
 		else
 		{
-			throw new IllegalArgumentException("Hotkey VirtualKeyCode not Found:" + pices[pices.length - 1]);
+			throw new InvalidHotkeyStringException("Hotkey VirtualKeyCode not Found:" + pices[pices.length - 1]);
 		}
 	}
 
@@ -136,11 +143,25 @@ public class HotKey
 	}
 
 
-	@Override
+	/**
+	 * @return the HotkeyString as in Ctrl + Alt + Delete
+	 */
+	public String getHotkeyString()
+	{
+		return (isControl() ? "Ctrl + " : "") + (isAlt() ? "Alt + " : "") + (isShift() ? "Shift + " : "") + (isWin() ? "Win + " : "") + KeyCodes.get(getKeyCode());
+	}
+
+
+	/**
+	 * retruns a StringRepresentation including Status
+	 * @return the HotkeyString as in [F8] Registered
+	 */
 	public String toString()
 	{
-		return "HotKey(" + (isControl() ? "Ctrl + " : "") + (isAlt() ? "Alt + " : "") + (isShift() ? "Shift + " : "") + (isWin() ? "Win + " : "") + KeyCodes.get(getKeyCode()) + ")" + (isRegistered() ? " Registered" : "") + (isToBeDeleted() ? " toBeDeleted" : "") + (isError() ? " E R R O R" : "");
+		return "[" + getHotkeyString() + "]" + (isRegistered() ? " Registered" : "") + (isToBeDeleted() ? " toBeDeleted" : "") + (isError() ? " E R R O R" : "");
 	}
+
+	
 
 
 	// <editor-fold defaultstate="collapsed" desc="Getters">
