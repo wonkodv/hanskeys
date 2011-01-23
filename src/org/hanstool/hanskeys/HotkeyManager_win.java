@@ -206,29 +206,28 @@ class HotkeyManager_win extends HotkeyManager implements Runnable
 	{
 
 		User32_ext I = (User32_ext) Native.loadLibrary("User32", User32_ext.class);
-		/* BOOL WINAPI RegisterHotKey(
+
+
+		/** BOOL WINAPI RegisterHotKey(
 		__in_opt  HWND hWnd,
 		__in      int id,
 		__in      UINT fsModifiers,
 		__in      UINT vk
 		);
 		 */
-
-
 		boolean RegisterHotKey(HWND hWnd, int id, int fsModifiers, int vk);
 
-		/*
+
+		/**
 		BOOL WINAPI UnregisterHotKey(
 		__in_opt  HWND hWnd,
 		__in      int id
 		);
 		 */
-
 		boolean UnregisterHotKey(HWND hWnd, int id);
 
 		public final int WM_HOTKEY = 0x0312;
-
-		/*BOOL WINAPI PeekMessage(
+		/**BOOL WINAPI PeekMessage(
 		__out     LPMSG lpMsg,
 		__in_opt  HWND hWnd,
 		__in      UINT wMsgFilterMin,
