@@ -1,4 +1,3 @@
-
 /*
  * HansKeys
  * Global Hotkeys for java on All Plattforms(coming soon).
@@ -14,14 +13,17 @@ package org.hanstool.hanskeys;
 
 /**
  * Listener for Hotkeys
+ * 
  * @author Wonko
  */
 public interface HotkeyListener
 {
-
+	
 	/**
 	 * Called when the hotkey is pressed
+	 * 
+	 * @param hk
 	 */
 	public void onHotkeyPress(HotKey hk);
-
+	
 }

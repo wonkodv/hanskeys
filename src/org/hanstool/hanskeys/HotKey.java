@@ -1,4 +1,3 @@
-
 /*
  * HansKeys
  * Global Hotkeys for java on All Plattforms(coming soon).
@@ -18,43 +17,41 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
  * @author Wonko
  */
 public class HotKey
 {
-
-	private final int keyCode;
-
-	private final boolean alt;
-
-	private final boolean control;
-
-	private final boolean shift;
-
-	private final boolean win;
-
-	private final boolean noRepeat;
-
-	private boolean registered;
-
-	private boolean toBeDeleted;
-
-	private boolean error;
-
-	private int id;
-
-	private final List<HotkeyListener> listeners;
-
-
+	
+	private final int					keyCode;
+	
+	private final boolean				alt;
+	
+	private final boolean				control;
+	
+	private final boolean				shift;
+	
+	private final boolean				win;
+	
+	private final boolean				noRepeat;
+	
+	private boolean						registered;
+	
+	private boolean						toBeDeleted;
+	
+	private boolean						error;
+	
+	private int							id;
+	
+	private final List<HotkeyListener>	listeners;
+	
 	/**
-	 *
 	 * @param keyCode
 	 * @param alt
 	 * @param control
 	 * @param shift
 	 * @param win
-	 * @param noRepeat Windows Only. See MSDN RegisterHotkey
+	 * @param noRepeat
+	 *            Windows Only. See MSDN RegisterHotkey
 	 * @param listeners
 	 */
 	public HotKey(int keyCode, boolean control, boolean alt, boolean shift, boolean win, boolean noRepeat, HotkeyListener... listeners)
@@ -68,81 +65,74 @@ public class HotKey
 		error = false;
 		this.listeners = new LinkedList<HotkeyListener>(Arrays.asList(listeners));
 	}
-
-
+	
 	/**
 	 * Creates a new Hotkey from a StringRepresentation
-	 * @param hotkey	String in Form of Ctrl + Alt + Del Use Only names From KeyCodes.VkToStrMap
-	 * @param noRepeat Windows Only(i guess). See MSDN RegisterHotkey
+	 * 
+	 * @param hotkey
+	 *            String in Form of Ctrl + Alt + Del Use Only names From
+	 *            KeyCodes.VkToStrMap
+	 * @param noRepeat
+	 *            Windows Only(i guess). See MSDN RegisterHotkey
 	 * @param listeners
-	 * @throws InvalidHotkeyStringException if the String was bad
+	 * @throws InvalidHotkeyStringException
+	 *             if the String was bad
 	 */
+	@SuppressWarnings("boxing")
 	public HotKey(String hotkey, boolean noRepeat, HotkeyListener... listeners) throws InvalidHotkeyStringException
 	{
-
+		
 		String[] pices = hotkey.split("[ +]+");
-		if (pices.length == 0)
+		if(pices.length == 0)
 		{
 			throw new InvalidHotkeyStringException("Hotkey must not be empty");
 		}
-
-		Integer vk = KeyCodes.getMapStrToVK().get(pices[pices.length - 1]);
-
-		if (vk != null)
+		
+		Integer vk = KeyCodes.StrToVkMap.get(pices[pices.length - 1]);
+		
+		if(vk != null)
 		{
-
-			boolean alt = false, ctrl = false, shift = false, win = false;
-			for (int i = 0; i < pices.length - 1; i++)
+			
+			boolean _alt = false, _control = false, _shift = false, _win = false;
+			for(int i = 0; i < pices.length - 1; i++ )
 			{
-				if (pices[i].equalsIgnoreCase("Ctrl"))
+				if(pices[i].equalsIgnoreCase("Ctrl"))
 				{
-					ctrl = true;
+					_control = true;
 				}
-				else if (pices[i].equalsIgnoreCase("Alt"))
+				else if(pices[i].equalsIgnoreCase("Alt"))
 				{
-					alt = true;
+					_alt = true;
 				}
-				else if (pices[i].equalsIgnoreCase("Shift"))
+				else if(pices[i].equalsIgnoreCase("Shift"))
 				{
-					shift = true;
+					_shift = true;
 				}
-				else if (pices[i].equalsIgnoreCase("Win"))
+				else if(pices[i].equalsIgnoreCase("Win"))
 				{
-					win = true;
+					_win = true;
 				}
 				else
 				{
 					throw new InvalidHotkeyStringException("No Valid Hotkey Modifier :" + pices[i]);
 				}
-
+				
 			}
 			this.keyCode = vk;
-			this.alt = alt;
-			this.control = ctrl;
-			this.shift = shift;
-			this.win = win;
+			this.alt = _alt;
+			this.control = _control;
+			this.shift = _shift;
+			this.win = _win;
 			this.noRepeat = noRepeat;
 			this.listeners = new LinkedList<HotkeyListener>(Arrays.asList(listeners));
-
+			
 		}
 		else
 		{
 			throw new InvalidHotkeyStringException("Hotkey VirtualKeyCode not Found:" + pices[pices.length - 1]);
 		}
 	}
-
-
-	public void onHotkeyPress()
-	{
-		for (Iterator<HotkeyListener> it = listeners.iterator(); it.hasNext();)
-		{
-			HotkeyListener hotkeyListener = it.next();
-
-			hotkeyListener.onHotkeyPress(this);
-		}
-	}
-
-
+	
 	/**
 	 * @return the HotkeyString as in Ctrl + Alt + Delete
 	 */
@@ -150,20 +140,15 @@ public class HotKey
 	{
 		return (isControl() ? "Ctrl + " : "") + (isAlt() ? "Alt + " : "") + (isShift() ? "Shift + " : "") + (isWin() ? "Win + " : "") + KeyCodes.get(getKeyCode());
 	}
-
-
-	/**
-	 * retruns a StringRepresentation including Status
-	 * @return the HotkeyString as in [F8] Registered
-	 */
-	public String toString()
-	{
-		return "[" + getHotkeyString() + "]" + (isRegistered() ? " Registered" : "") + (isToBeDeleted() ? " toBeDeleted" : "") + (isError() ? " E R R O R" : "");
-	}
-
 	
-
-
+	/**
+	 * @return the OS identifier for the hotkey
+	 */
+	public int getId()
+	{
+		return id;
+	}
+	
 	// <editor-fold defaultstate="collapsed" desc="Getters">
 	/**
 	 * @return the keyCode
@@ -172,53 +157,7 @@ public class HotKey
 	{
 		return keyCode;
 	}
-
-
-	/**
-	 * @return the alt
-	 */
-	public boolean isAlt()
-	{
-		return alt;
-	}
-
-
-	/**
-	 * @return the control
-	 */
-	public boolean isControl()
-	{
-		return control;
-	}
-
-
-	/**
-	 * @return the shift
-	 */
-	public boolean isShift()
-	{
-		return shift;
-	}
-
-
-	/**
-	 * @return the win
-	 */
-	public boolean isWin()
-	{
-		return win;
-	}
-
-
-	/**
-	 * @return the noRepeat
-	 */
-	public boolean isNoRepeat()
-	{
-		return noRepeat;
-	}
-
-
+	
 	/**
 	 * @return the listeners
 	 */
@@ -226,62 +165,23 @@ public class HotKey
 	{
 		return listeners;
 	}
-
-
+	
 	/**
-	 * @return the registered
+	 * @return the alt
 	 */
-	public boolean isRegistered()
+	public boolean isAlt()
 	{
-		return registered;
+		return alt;
 	}
-
-
+	
 	/**
-	 * @param registered the registered to set
+	 * @return the control
 	 */
-	protected void setRegistered(boolean registered)
+	public boolean isControl()
 	{
-		this.registered = registered;
+		return control;
 	}
-
-
-	/**
-	 * @return the OS identifier for the hotkey
-	 */
-	public int getId()
-	{
-		return id;
-	}
-
-
-	/**
-	 * @param id the id to set
-	 */
-	protected void setId(int id)
-	{
-		this.id = id;
-	}
-
-
-	/**
-	 * @return the toBeDeleted
-	 */
-	public boolean isToBeDeleted()
-	{
-		return toBeDeleted;
-	}
-
-
-	/**
-	 * @param toBeDeleted the toBeDeleted to set
-	 */
-	protected void setToBeDeleted(boolean toBeDeleted)
-	{
-		this.toBeDeleted = toBeDeleted;
-	}
-
-
+	
 	/**
 	 * @return the error
 	 */
@@ -289,14 +189,106 @@ public class HotKey
 	{
 		return error;
 	}
-
-
+	
 	/**
-	 * @param error the error to set
+	 * @return the noRepeat
+	 */
+	public boolean isNoRepeat()
+	{
+		return noRepeat;
+	}
+	
+	/**
+	 * @return the registered
+	 */
+	public boolean isRegistered()
+	{
+		return registered;
+	}
+	
+	/**
+	 * @return the shift
+	 */
+	public boolean isShift()
+	{
+		return shift;
+	}
+	
+	/**
+	 * @return the toBeDeleted
+	 */
+	public boolean isToBeDeleted()
+	{
+		return toBeDeleted;
+	}
+	
+	/**
+	 * @return the win
+	 */
+	public boolean isWin()
+	{
+		return win;
+	}
+	
+	/**
+	 * 
+	 */
+	public void onHotkeyPress()
+	{
+		for(Iterator<HotkeyListener> it = listeners.iterator(); it.hasNext();)
+		{
+			HotkeyListener hotkeyListener = it.next();
+			
+			hotkeyListener.onHotkeyPress(this);
+		}
+	}
+	
+	/**
+	 * @param error
+	 *            the error to set
 	 */
 	protected void setError(boolean error)
 	{
 		this.error = error;
 	}
+	
 	// </editor-fold>
+	
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	protected void setId(int id)
+	{
+		this.id = id;
+	}
+	
+	/**
+	 * @param registered
+	 *            the registered to set
+	 */
+	protected void setRegistered(boolean registered)
+	{
+		this.registered = registered;
+	}
+	
+	/**
+	 * @param toBeDeleted
+	 *            the toBeDeleted to set
+	 */
+	protected void setToBeDeleted(boolean toBeDeleted)
+	{
+		this.toBeDeleted = toBeDeleted;
+	}
+	
+	/**
+	 * retruns a StringRepresentation including Status
+	 * 
+	 * @return the HotkeyString as in [F8] Registered
+	 */
+	@Override
+	public String toString()
+	{
+		return "[" + getHotkeyString() + "]" + (isRegistered() ? " Registered" : "") + (isToBeDeleted() ? " toBeDeleted" : "") + (isError() ? " E R R O R" : "");
+	}
 }
