@@ -41,7 +41,7 @@ public class KeyCodes
 			{
 				try
 				{
-					String key = f.getName().substring(3);
+					String key = f.getName().substring(3).toUpperCase();
 					Integer value = f.getInt(null);
 					m1.put(key, value);
 					m2.put(value, key);
@@ -88,9 +88,12 @@ public class KeyCodes
 	 * @param sVk
 	 *            StringRepresentation
 	 * @return KeyCode
+	 * @throws IllegalArgumentException
+	 *             if sVk is not a valid keycodeString
 	 */
 	public static Integer get(String sVk)
 	{
+		sVk = sVk.toUpperCase();
 		Integer result = StrToVkMap.get(sVk);
 		if(result != null)
 		{

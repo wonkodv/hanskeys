@@ -87,8 +87,15 @@ public class HotKey
 		{
 			throw new InvalidHotkeyStringException("Hotkey must not be empty");
 		}
-		
-		Integer vk = KeyCodes.StrToVkMap.get(pices[pices.length - 1]);
+		Integer vk;
+		try
+		{
+			vk = KeyCodes.get(pices[pices.length - 1]);
+		}
+		catch(IllegalArgumentException e)
+		{
+			throw new InvalidHotkeyStringException("Illegal Hotkey Key: " + pices[pices.length - 1]);
+		}
 		
 		if(vk != null)
 		{
