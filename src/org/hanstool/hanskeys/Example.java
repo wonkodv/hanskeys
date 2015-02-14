@@ -43,17 +43,17 @@ public class Example
 		hm.addHotKey(F4);
 		
 		hm.start();
-		Thread.sleep(5000);
+		Thread.sleep(1000);
 		hm.removeHotKey(F4);
 		System.out.println("removed F4");
-		Thread.sleep(5000);
+		Thread.sleep(1000);
 		hm.removeHotKey(F6);
 		System.out.println("removed F6");
 		synchronized(F4)
 		{
 			hm.addHotKey(F4);
 			F4.wait();
-			System.out.println("added f4 [[" + F4);
+			System.out.println("added f4 " + F4);
 			
 		}
 		Thread.sleep(5000);

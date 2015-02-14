@@ -11,15 +11,12 @@
  */
 package org.hanstool.hanskeys;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * @author Wonko
  */
 public abstract class HotkeyManager
 {
-	
+
 	/**
 	 * @return the right HotkeyManager for the System
 	 */
@@ -30,71 +27,43 @@ public abstract class HotkeyManager
 		{
 			return new HotkeyManager_win();
 		}
-		throw new UnsupportedOperationException("not Implemented");
+		return new HotkeyManager_null();
+
 	}
-	
-	protected final List<HotKey>	hotkeys;
-	
+
 	/**
-	 * 
-	 */
-	public HotkeyManager()
-	{
-		this.hotkeys = new LinkedList<HotKey>();
-	}
-	
-	/**
-	 * Registers a hotkey. It is inserted in the WorkerThreads TodoQueue that
-	 * will register it pretty soon. hk.notifyAll is called then
-	 * 
+	 * Registers a hotkey. It might take a little while. As soon as the hotkey
+	 * is active, hk ist notified.
+	 *
 	 * @param hk
 	 */
-	public synchronized void addHotKey(HotKey hk)
-	{
-		if(hotkeys.contains(hk))
-		{
-			throw new UnsupportedOperationException("Cant insert the same hotkey twice");
-		}
-		hotkeys.add(hk);
-		update();
-	}
+	public abstract void addHotKey(HotKey hk);
 	
 	/**
-	 * Removes a hotkey. It is inserted in the WorkerThreads TodoQueue that will
-	 * Delete it pretty soon
-	 * 
+	 * Unregisters a hotkey. It might take a little while. As soon as the hotkey
+	 * is deactivated, hk ist notified.
+	 *
 	 * @param hk
 	 */
-	public synchronized void removeHotKey(HotKey hk)
-	{
-		if(hotkeys.contains(hk))
-		{
-			hk.setToBeDeleted(true);
-			update();
-		}
-		else
-		{
-			throw new UnsupportedOperationException("Hotkey is not in the list");
-		}
-	}
-	
+	public abstract void removeHotKey(HotKey hk);
+
 	/**
 	 * Start Listening for Hotkeys
 	 */
 	public abstract void start();
-	
+
 	/**
 	 * Stop Listening for Hotkeys
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	public abstract void stop() throws InterruptedException;
-	
+
 	/**
 	 * Update is called after there is a change to the hotkeys. Is called
 	 * synchronized on this. It would be polite to call notify on the hotkey if
 	 * its changed
 	 */
 	protected abstract void update();
-	
+
 }

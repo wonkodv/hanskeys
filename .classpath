@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="D:/code/_lib/jna/jna.jar"/>
-	<classpathentry exported="true" kind="lib" path="D:/code/_lib/jna/platform.jar"/>
+	<classpathentry kind="lib" path="/home/mr/code/jlibs/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="/home/mr/code/jlibs/jna-platform-4.1.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
