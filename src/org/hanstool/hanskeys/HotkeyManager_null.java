@@ -20,35 +20,35 @@ class HotkeyManager_null extends HotkeyManager
 	{
 		super();
 	}
-
+	
 	@Override
 	public void start()
 	{
 	}
-
+	
 	@Override
 	public void stop() throws InterruptedException
 	{
 	}
-
+	
 	@Override
 	protected void update()
 	{
 	}
-
+	
 	@Override
 	public void addHotKey(HotKey hk)
 	{
 		notifyHK(hk);
 	}
-
+	
 	@Override
 	public void removeHotKey(HotKey hk)
 	{
 		notifyHK(hk);
 	}
-	
-	private void notifyHK(HotKey hk)
+
+	private void notifyHK(final HotKey hk)
 	{
 		new Thread() {
 			@Override
